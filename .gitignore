@@ -1,0 +1,12 @@
+## Visual Studio / .NET Ignore
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+## Database local files (optional, but keep template seed)
+# Data/
