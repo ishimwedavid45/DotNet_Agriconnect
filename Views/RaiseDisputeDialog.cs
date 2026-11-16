@@ -1,3 +1,4 @@
+using AgriConnect.Helpers;
 using AgriConnect.Models;
 using AgriConnect.Repositories;
 
@@ -26,20 +27,20 @@ namespace AgriConnect.Views
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
-            BackColor = Color.White;
+            BackColor = AppTheme.White;
             Font = new Font("Segoe UI", 9.5f);
 
             var pnlHeader = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 60,
-                BackColor = Color.FromArgb(198, 40, 40)
+                BackColor = AppTheme.Charcoal
             };
             var lblTitle = new Label
             {
                 Text = $"⚠️ Open Formal Dispute (Order #{_orderId})",
                 Font = new Font("Segoe UI", 12f, FontStyle.Bold),
-                ForeColor = Color.White,
+                ForeColor = AppTheme.White,
                 Location = new Point(15, 12),
                 AutoSize = true
             };
@@ -47,7 +48,7 @@ namespace AgriConnect.Views
             {
                 Text = "AgriConnect Admin will arbitrate and freeze escrow release until resolved.",
                 Font = new Font("Segoe UI", 8.5f),
-                ForeColor = Color.WhiteSmoke,
+                ForeColor = AppTheme.SlateBorder,
                 Location = new Point(18, 36),
                 AutoSize = true
             };
@@ -58,13 +59,16 @@ namespace AgriConnect.Views
                 Text = "Reason for Dispute / Issue Description *:",
                 Location = new Point(20, 75),
                 Size = new Size(400, 20),
-                Font = new Font("Segoe UI", 9f, FontStyle.Bold)
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary
             };
             txtReason = new TextBox
             {
                 Location = new Point(20, 100),
                 Size = new Size(440, 60),
-                Multiline = true
+                Multiline = true,
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary
             };
 
             var lblEv = new Label
@@ -72,37 +76,35 @@ namespace AgriConnect.Views
                 Text = "Evidence / Details (damaged produce, wrong weight, etc.):",
                 Location = new Point(20, 175),
                 Size = new Size(440, 20),
-                Font = new Font("Segoe UI", 9f, FontStyle.Bold)
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary
             };
             txtEvidence = new TextBox
             {
                 Location = new Point(20, 200),
                 Size = new Size(440, 100),
-                Multiline = true
+                Multiline = true,
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary
             };
 
             var btnSubmit = new Button
             {
                 Text = "Submit Dispute",
-                BackColor = Color.FromArgb(198, 40, 40),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10f, FontStyle.Bold),
                 Location = new Point(200, 320),
                 Size = new Size(150, 36)
             };
-            btnSubmit.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnSubmit);
             btnSubmit.Click += BtnSubmit_Click;
 
             var btnCancel = new Button
             {
                 Text = "Cancel",
-                BackColor = Color.FromArgb(235, 235, 235),
-                FlatStyle = FlatStyle.Flat,
                 Location = new Point(360, 320),
                 Size = new Size(100, 36)
             };
-            btnCancel.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnCancel);
             btnCancel.Click += (s, e) => DialogResult = DialogResult.Cancel;
 
             Controls.AddRange(new Control[] { pnlHeader, lblReason, txtReason, lblEv, txtEvidence, btnSubmit, btnCancel });

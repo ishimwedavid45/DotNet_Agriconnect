@@ -1,3 +1,5 @@
+using AgriConnect.Helpers;
+
 namespace AgriConnect.Views
 {
     public class SimpleInputDialog : Form
@@ -13,7 +15,7 @@ namespace AgriConnect.Views
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
-            BackColor = Color.White;
+            BackColor = AppTheme.White;
             Font = new Font("Segoe UI", 9.5f);
 
             var lblPrompt = new Label
@@ -21,7 +23,8 @@ namespace AgriConnect.Views
                 Text = prompt,
                 Location = new Point(20, 20),
                 Size = new Size(405, 45),
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary
             };
 
             txtInput = new TextBox
@@ -29,32 +32,29 @@ namespace AgriConnect.Views
                 Text = defaultValue,
                 Location = new Point(20, 75),
                 Size = new Size(405, 30),
-                Font = new Font("Segoe UI", 10.5f)
+                Font = new Font("Segoe UI", 10.5f),
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary
             };
 
             var btnOk = new Button
             {
                 Text = "Confirm",
-                BackColor = Color.FromArgb(46, 125, 50),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
                 Location = new Point(215, 125),
                 Size = new Size(100, 34),
                 DialogResult = DialogResult.OK
             };
-            btnOk.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnOk);
 
             var btnCancel = new Button
             {
                 Text = "Cancel",
-                BackColor = Color.FromArgb(235, 235, 235),
-                FlatStyle = FlatStyle.Flat,
                 Location = new Point(325, 125),
                 Size = new Size(100, 34),
                 DialogResult = DialogResult.Cancel
             };
-            btnCancel.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnCancel);
 
             Controls.AddRange(new Control[] { lblPrompt, txtInput, btnOk, btnCancel });
             AcceptButton = btnOk;

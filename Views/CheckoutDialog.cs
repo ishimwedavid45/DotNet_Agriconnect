@@ -1,4 +1,5 @@
 using AgriConnect.Controllers;
+using AgriConnect.Helpers;
 using AgriConnect.Models;
 
 namespace AgriConnect.Views
@@ -31,20 +32,20 @@ namespace AgriConnect.Views
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
-            BackColor = Color.White;
+            BackColor = AppTheme.White;
             Font = new Font("Segoe UI", 9.5f);
 
             var pnlHeader = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 70,
-                BackColor = Color.FromArgb(46, 125, 50)
+                BackColor = AppTheme.Charcoal
             };
             var lblTitle = new Label
             {
                 Text = "🛒 Order Checkout & Escrow Payment",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
-                ForeColor = Color.White,
+                ForeColor = AppTheme.White,
                 Location = new Point(20, 12),
                 AutoSize = true
             };
@@ -52,7 +53,7 @@ namespace AgriConnect.Views
             {
                 Text = "100% Protected: Farmer receives payment only after you confirm delivery.",
                 Font = new Font("Segoe UI", 8.5f),
-                ForeColor = Color.FromArgb(232, 245, 233),
+                ForeColor = AppTheme.SlateBorder,
                 Location = new Point(22, 40),
                 AutoSize = true
             };
@@ -63,6 +64,7 @@ namespace AgriConnect.Views
             {
                 Text = "Order Items:",
                 Font = new Font("Segoe UI", 10f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(25, 80),
                 AutoSize = true
             };
@@ -72,7 +74,10 @@ namespace AgriConnect.Views
                 Location = new Point(25, 105),
                 Size = new Size(515, 110),
                 Font = new Font("Consolas", 9f),
-                IntegralHeight = false
+                IntegralHeight = false,
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary,
+                BorderStyle = BorderStyle.FixedSingle
             };
             foreach (var item in AppSession.Cart)
             {
@@ -85,7 +90,9 @@ namespace AgriConnect.Views
                 Text = "Delivery Method",
                 Location = new Point(25, 225),
                 Size = new Size(515, 130),
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
+                BackColor = AppTheme.White
             };
 
             rbDelivery = new RadioButton
@@ -94,7 +101,8 @@ namespace AgriConnect.Views
                 Checked = true,
                 Location = new Point(15, 25),
                 Size = new Size(450, 24),
-                Font = new Font("Segoe UI", 9f, FontStyle.Regular)
+                Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+                ForeColor = AppTheme.TextPrimary
             };
             rbDelivery.CheckedChanged += (s, e) => UpdateCalculations();
 
@@ -103,7 +111,8 @@ namespace AgriConnect.Views
                 Text = "Self-Pickup at Farmer Collection Station (Free)",
                 Location = new Point(15, 50),
                 Size = new Size(450, 24),
-                Font = new Font("Segoe UI", 9f, FontStyle.Regular)
+                Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+                ForeColor = AppTheme.TextPrimary
             };
             rbPickup.CheckedChanged += (s, e) => UpdateCalculations();
 
@@ -112,14 +121,17 @@ namespace AgriConnect.Views
                 Text = "Destination Address:",
                 Location = new Point(15, 85),
                 Size = new Size(130, 20),
-                Font = new Font("Segoe UI", 8.5f, FontStyle.Regular)
+                Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
+                ForeColor = AppTheme.TextSecondary
             };
             txtAddress = new TextBox
             {
                 Text = AppSession.CurrentUser?.DeliveryAddress ?? "KG 11 Ave, Kimironko Plaza, Kigali",
                 Location = new Point(150, 82),
                 Size = new Size(345, 24),
-                Font = new Font("Segoe UI", 9f, FontStyle.Regular)
+                Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary
             };
             grpDelivery.Controls.AddRange(new Control[] { rbDelivery, rbPickup, lblAddr, txtAddress });
 
@@ -129,21 +141,26 @@ namespace AgriConnect.Views
                 Text = "Payment Gateway (Held in Escrow)",
                 Location = new Point(25, 365),
                 Size = new Size(515, 75),
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
+                BackColor = AppTheme.White
             };
             var lblPayMethod = new Label
             {
                 Text = "Select Gateway:",
                 Location = new Point(15, 30),
                 Size = new Size(120, 24),
-                Font = new Font("Segoe UI", 9f, FontStyle.Regular)
+                Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+                ForeColor = AppTheme.TextSecondary
             };
             cmbPaymentMethod = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Location = new Point(150, 28),
                 Size = new Size(345, 26),
-                Font = new Font("Segoe UI", 9f, FontStyle.Regular)
+                Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary
             };
             cmbPaymentMethod.Items.AddRange(new object[] { "MTN MoMo (*182#)", "Airtel Money (*500#)", "Bank Card / Visa / MasterCard" });
             cmbPaymentMethod.SelectedIndex = 0;
@@ -154,19 +171,19 @@ namespace AgriConnect.Views
             {
                 Location = new Point(25, 450),
                 Size = new Size(515, 120),
-                BackColor = Color.FromArgb(245, 247, 245),
+                BackColor = AppTheme.LightGrey,
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            lblProduceTotal = new Label { Location = new Point(15, 12), Size = new Size(480, 20), Text = "Produce Cost: RWF 0" };
-            lblDeliveryFee = new Label { Location = new Point(15, 34), Size = new Size(480, 20), Text = "Delivery Fee: RWF 0" };
-            lblPlatformFee = new Label { Location = new Point(15, 56), Size = new Size(480, 20), Text = "Escrow & Platform Fee (3%): RWF 0" };
+            lblProduceTotal = new Label { Location = new Point(15, 12), Size = new Size(480, 20), Text = "Produce Cost: RWF 0", ForeColor = AppTheme.TextPrimary };
+            lblDeliveryFee = new Label { Location = new Point(15, 34), Size = new Size(480, 20), Text = "Delivery Fee: RWF 0", ForeColor = AppTheme.TextPrimary };
+            lblPlatformFee = new Label { Location = new Point(15, 56), Size = new Size(480, 20), Text = "Escrow & Platform Fee (3%): RWF 0", ForeColor = AppTheme.TextPrimary };
             lblGrandTotal = new Label
             {
                 Location = new Point(15, 82),
                 Size = new Size(480, 26),
                 Font = new Font("Segoe UI", 11f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(46, 125, 50),
+                ForeColor = AppTheme.Charcoal,
                 Text = "TOTAL AMOUNT: RWF 0"
             };
             pnlSummary.Controls.AddRange(new Control[] { lblProduceTotal, lblDeliveryFee, lblPlatformFee, lblGrandTotal });
@@ -175,26 +192,21 @@ namespace AgriConnect.Views
             var btnConfirm = new Button
             {
                 Text = "🔒 Confirm & Pay via Escrow",
-                BackColor = Color.FromArgb(46, 125, 50),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10.5f, FontStyle.Bold),
                 Location = new Point(180, 585),
                 Size = new Size(220, 40)
             };
-            btnConfirm.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnConfirm);
             btnConfirm.Click += BtnConfirm_Click;
 
             var btnCancel = new Button
             {
                 Text = "Cancel",
-                BackColor = Color.FromArgb(235, 235, 235),
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9.5f),
                 Location = new Point(410, 585),
                 Size = new Size(130, 40)
             };
-            btnCancel.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnCancel);
             btnCancel.Click += (s, e) => DialogResult = DialogResult.Cancel;
 
             Controls.AddRange(new Control[] { pnlHeader, lblCartTitle, lstItems, grpDelivery, grpPayment, pnlSummary, btnConfirm, btnCancel });

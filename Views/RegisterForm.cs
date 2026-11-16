@@ -1,4 +1,5 @@
 using AgriConnect.Controllers;
+using AgriConnect.Helpers;
 using AgriConnect.Models;
 
 namespace AgriConnect.Views
@@ -41,20 +42,20 @@ namespace AgriConnect.Views
             StartPosition = FormStartPosition.CenterParent;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
-            BackColor = Color.White;
+            BackColor = AppTheme.White;
             Font = new Font("Segoe UI", 9.5f);
 
             var pnlTop = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 70,
-                BackColor = Color.FromArgb(46, 125, 50)
+                BackColor = AppTheme.Charcoal
             };
             var lblTitle = new Label
             {
                 Text = "🌱 Join AgriConnect Rwanda",
                 Font = new Font("Segoe UI", 14f, FontStyle.Bold),
-                ForeColor = Color.White,
+                ForeColor = AppTheme.White,
                 Location = new Point(20, 12),
                 AutoSize = true
             };
@@ -62,7 +63,7 @@ namespace AgriConnect.Views
             {
                 Text = "Connecting farmers, buyers, transporters & agronomists directly",
                 Font = new Font("Segoe UI", 8.5f),
-                ForeColor = Color.FromArgb(232, 245, 233),
+                ForeColor = AppTheme.SlateBorder,
                 Location = new Point(22, 38),
                 AutoSize = true
             };
@@ -72,7 +73,8 @@ namespace AgriConnect.Views
             {
                 Location = new Point(20, 80),
                 Size = new Size(465, 500),
-                AutoScroll = true
+                AutoScroll = true,
+                BackColor = AppTheme.White
             };
 
             int y = 5;
@@ -84,10 +86,15 @@ namespace AgriConnect.Views
                     Location = new Point(10, y),
                     Size = new Size(160, 22),
                     Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                    ForeColor = Color.FromArgb(50, 50, 50)
+                    ForeColor = AppTheme.TextPrimary
                 };
                 ctrl.Location = new Point(180, y);
                 ctrl.Size = new Size(260, height);
+                if (ctrl is TextBox tb)
+                {
+                    tb.BackColor = AppTheme.OffWhite;
+                    tb.ForeColor = AppTheme.TextPrimary;
+                }
                 pnlBody.Controls.Add(l);
                 pnlBody.Controls.Add(ctrl);
                 y += height + 10;
@@ -120,51 +127,45 @@ namespace AgriConnect.Views
             AddField("Sector *", txtSector);
 
             // Farmer custom controls
-            lblFarmSize = new Label { Text = "Farm Size (ha):", Location = new Point(10, y), Size = new Size(160, 22), Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            txtFarmSize = new TextBox { Location = new Point(180, y), Size = new Size(260, 26) };
+            lblFarmSize = new Label { Text = "Farm Size (ha):", Location = new Point(10, y), Size = new Size(160, 22), Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            txtFarmSize = new TextBox { Location = new Point(180, y), Size = new Size(260, 26), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             pnlBody.Controls.AddRange(new Control[] { lblFarmSize, txtFarmSize });
             y += 36;
 
-            lblCrops = new Label { Text = "Primary Crops:", Location = new Point(10, y), Size = new Size(160, 22), Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            txtCrops = new TextBox { Location = new Point(180, y), Size = new Size(260, 26) };
+            lblCrops = new Label { Text = "Primary Crops:", Location = new Point(10, y), Size = new Size(160, 22), Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            txtCrops = new TextBox { Location = new Point(180, y), Size = new Size(260, 26), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             pnlBody.Controls.AddRange(new Control[] { lblCrops, txtCrops });
             y += 36;
 
-            lblCoop = new Label { Text = "Cooperative Name:", Location = new Point(10, y), Size = new Size(160, 22), Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            txtCoop = new TextBox { Location = new Point(180, y), Size = new Size(260, 26) };
+            lblCoop = new Label { Text = "Cooperative Name:", Location = new Point(10, y), Size = new Size(160, 22), Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            txtCoop = new TextBox { Location = new Point(180, y), Size = new Size(260, 26), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             pnlBody.Controls.AddRange(new Control[] { lblCoop, txtCoop });
             y += 36;
 
             // Buyer custom controls
-            lblDelivery = new Label { Text = "Delivery Address:", Location = new Point(10, y), Size = new Size(160, 22), Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            txtDelivery = new TextBox { Location = new Point(180, y), Size = new Size(260, 26) };
+            lblDelivery = new Label { Text = "Delivery Address:", Location = new Point(10, y), Size = new Size(160, 22), Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            txtDelivery = new TextBox { Location = new Point(180, y), Size = new Size(260, 26), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             pnlBody.Controls.AddRange(new Control[] { lblDelivery, txtDelivery });
             y += 36;
 
             var btnSubmit = new Button
             {
                 Text = "Register Account",
-                BackColor = Color.FromArgb(46, 125, 50),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10.5f, FontStyle.Bold),
                 Location = new Point(150, 590),
-                Size = new Size(180, 38),
-                Cursor = Cursors.Hand
+                Size = new Size(180, 38)
             };
-            btnSubmit.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnSubmit);
             btnSubmit.Click += BtnSubmit_Click;
 
             var btnCancel = new Button
             {
                 Text = "Cancel",
-                BackColor = Color.FromArgb(235, 235, 235),
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9.5f),
                 Location = new Point(340, 590),
                 Size = new Size(110, 38)
             };
-            btnCancel.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnCancel);
             btnCancel.Click += (s, e) => DialogResult = DialogResult.Cancel;
 
             Controls.AddRange(new Control[] { pnlTop, pnlBody, btnSubmit, btnCancel });
@@ -252,53 +253,62 @@ namespace AgriConnect.Views
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
-            BackColor = Color.White;
+            BackColor = AppTheme.White;
             Font = new Font("Segoe UI", 9.5f);
+
+            var pnlTop = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 45,
+                BackColor = AppTheme.Charcoal
+            };
 
             var lblHeader = new Label
             {
                 Text = "📲 One-Time Password Verification",
                 Font = new Font("Segoe UI", 11f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(46, 125, 50),
-                Location = new Point(20, 15),
+                ForeColor = AppTheme.White,
+                Location = new Point(15, 12),
                 AutoSize = true
             };
+            pnlTop.Controls.Add(lblHeader);
 
             var lblInfo = new Label
             {
                 Text = $"We simulated sending an SMS OTP to {phone}.\nFor test verification, your security code is: {_expectedOtp}",
-                Location = new Point(20, 45),
-                Size = new Size(360, 45)
+                Location = new Point(20, 55),
+                Size = new Size(360, 45),
+                ForeColor = AppTheme.TextSecondary
             };
 
             var lblEnter = new Label
             {
                 Text = "Enter 6-digit OTP:",
-                Location = new Point(20, 100),
+                Location = new Point(20, 105),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary
             };
 
             txtInput = new TextBox
             {
                 Text = _expectedOtp, // pre-fill for ease of testing
-                Location = new Point(20, 125),
+                Location = new Point(20, 130),
                 Size = new Size(360, 30),
                 Font = new Font("Segoe UI", 12f, FontStyle.Bold),
-                TextAlign = HorizontalAlignment.Center
+                TextAlign = HorizontalAlignment.Center,
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary
             };
 
             var btnVerify = new Button
             {
                 Text = "Verify & Activate",
-                BackColor = Color.FromArgb(46, 125, 50),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10f, FontStyle.Bold),
                 Location = new Point(140, 175),
                 Size = new Size(130, 34)
             };
-            btnVerify.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnVerify);
             btnVerify.Click += (s, e) =>
             {
                 if (txtInput.Text.Trim() == _expectedOtp)
@@ -315,19 +325,17 @@ namespace AgriConnect.Views
             var btnCancel = new Button
             {
                 Text = "Cancel",
-                BackColor = Color.FromArgb(235, 235, 235),
-                FlatStyle = FlatStyle.Flat,
                 Location = new Point(280, 175),
                 Size = new Size(100, 34)
             };
-            btnCancel.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnCancel);
             btnCancel.Click += (s, e) =>
             {
                 DialogResult = DialogResult.Cancel;
                 Close();
             };
 
-            Controls.AddRange(new Control[] { lblHeader, lblInfo, lblEnter, txtInput, btnVerify, btnCancel });
+            Controls.AddRange(new Control[] { pnlTop, lblInfo, lblEnter, txtInput, btnVerify, btnCancel });
             AcceptButton = btnVerify;
         }
     }

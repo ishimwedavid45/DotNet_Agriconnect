@@ -1,4 +1,5 @@
 using AgriConnect.Controllers;
+using AgriConnect.Helpers;
 using AgriConnect.Models;
 
 namespace AgriConnect.Views
@@ -42,20 +43,20 @@ namespace AgriConnect.Views
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
-            BackColor = Color.White;
+            BackColor = AppTheme.White;
             Font = new Font("Segoe UI", 9.5f);
 
             var pnlHeader = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 65,
-                BackColor = Color.FromArgb(46, 125, 50)
+                BackColor = AppTheme.Charcoal
             };
             var lblTitle = new Label
             {
                 Text = _existingListing == null ? "🌱 New Farm Produce Listing" : "✏️ Edit Produce Listing",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
-                ForeColor = Color.White,
+                ForeColor = AppTheme.White,
                 Location = new Point(20, 12),
                 AutoSize = true
             };
@@ -63,7 +64,7 @@ namespace AgriConnect.Views
             {
                 Text = "Connect directly with Rwandan buyers without middlemen",
                 Font = new Font("Segoe UI", 8.5f),
-                ForeColor = Color.FromArgb(232, 245, 233),
+                ForeColor = AppTheme.SlateBorder,
                 Location = new Point(22, 38),
                 AutoSize = true
             };
@@ -73,7 +74,8 @@ namespace AgriConnect.Views
             {
                 Location = new Point(20, 75),
                 Size = new Size(520, 480),
-                AutoScroll = true
+                AutoScroll = true,
+                BackColor = AppTheme.White
             };
 
             int y = 10;
@@ -85,10 +87,20 @@ namespace AgriConnect.Views
                     Location = new Point(10, y),
                     Size = new Size(160, 24),
                     Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                    ForeColor = Color.FromArgb(50, 50, 50)
+                    ForeColor = AppTheme.TextPrimary
                 };
                 ctrl.Location = new Point(180, y);
                 ctrl.Size = new Size(320, height);
+                if (ctrl is TextBox tb)
+                {
+                    tb.BackColor = AppTheme.OffWhite;
+                    tb.ForeColor = AppTheme.TextPrimary;
+                }
+                else if (ctrl is NumericUpDown num)
+                {
+                    num.BackColor = AppTheme.OffWhite;
+                    num.ForeColor = AppTheme.TextPrimary;
+                }
                 pnlBody.Controls.Add(lbl);
                 pnlBody.Controls.Add(ctrl);
                 y += height + 12;
@@ -118,8 +130,8 @@ namespace AgriConnect.Views
             {
                 Location = new Point(180, y - 6),
                 Size = new Size(320, 20),
-                Font = new Font("Segoe UI", 8f, FontStyle.Italic),
-                ForeColor = Color.FromArgb(46, 125, 50),
+                Font = new Font("Segoe UI", 8.5f, FontStyle.Italic),
+                ForeColor = AppTheme.MutedGrey,
                 Text = "💡 Suggested fair market price: RWF 450 - 550 / kg"
             };
             pnlBody.Controls.Add(lblSuggestedPrice);
@@ -143,27 +155,21 @@ namespace AgriConnect.Views
             var btnSave = new Button
             {
                 Text = _existingListing == null ? "Publish Listing" : "Update Listing",
-                BackColor = Color.FromArgb(46, 125, 50),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10f, FontStyle.Bold),
                 Location = new Point(240, 560),
                 Size = new Size(150, 36)
             };
-            btnSave.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnSave);
             btnSave.Click += BtnSave_Click;
 
             var btnCancel = new Button
             {
                 Text = "Cancel",
-                BackColor = Color.FromArgb(230, 230, 230),
-                ForeColor = Color.Black,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9.5f),
                 Location = new Point(400, 560),
                 Size = new Size(100, 36)
             };
-            btnCancel.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnCancel);
             btnCancel.Click += (s, e) => DialogResult = DialogResult.Cancel;
 
             Controls.AddRange(new Control[] { pnlHeader, pnlBody, btnSave, btnCancel });

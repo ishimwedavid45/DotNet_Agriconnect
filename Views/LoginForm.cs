@@ -1,4 +1,5 @@
 using AgriConnect.Controllers;
+using AgriConnect.Helpers;
 using AgriConnect.Models;
 
 namespace AgriConnect.Views
@@ -28,25 +29,25 @@ namespace AgriConnect.Views
         private void InitializeComponent()
         {
             Text = "AgriConnect - Sign In";
-            Size = new Size(500, 600);
+            Size = new Size(500, 610);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
-            BackColor = Color.White;
+            BackColor = AppTheme.White;
             Font = new Font("Segoe UI", 9.5f);
 
             var pnlTop = new Panel
             {
                 Dock = DockStyle.Top,
                 Height = 110,
-                BackColor = Color.FromArgb(46, 125, 50)
+                BackColor = AppTheme.Charcoal
             };
 
             lblHeaderTitle = new Label
             {
                 Text = "🌱 AgriConnect Rwanda",
                 Font = new Font("Segoe UI", 16f, FontStyle.Bold),
-                ForeColor = Color.White,
+                ForeColor = AppTheme.White,
                 Location = new Point(25, 20),
                 AutoSize = true
             };
@@ -55,7 +56,7 @@ namespace AgriConnect.Views
             {
                 Text = "Smart Farm Produce Marketplace & Advisory Platform",
                 Font = new Font("Segoe UI", 9f),
-                ForeColor = Color.FromArgb(232, 245, 233),
+                ForeColor = AppTheme.SlateBorder,
                 Location = new Point(28, 55),
                 AutoSize = true
             };
@@ -65,7 +66,9 @@ namespace AgriConnect.Views
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Location = new Point(350, 20),
                 Size = new Size(115, 26),
-                Font = new Font("Segoe UI", 8.5f)
+                Font = new Font("Segoe UI", 8.5f),
+                BackColor = AppTheme.DarkGrey,
+                ForeColor = AppTheme.White
             };
             cmbLang.Items.AddRange(new object[] { "English", "Kinyarwanda", "Français" });
             cmbLang.SelectedIndex = 0;
@@ -73,14 +76,15 @@ namespace AgriConnect.Views
 
             pnlTop.Controls.AddRange(new Control[] { lblHeaderTitle, lblHeaderSubtitle, cmbLang });
 
-            int y = 140;
+            int y = 135;
 
             lblEmailPhone = new Label
             {
                 Text = "Email or Phone Number:",
                 Location = new Point(45, y),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary
             };
             y += 26;
 
@@ -89,7 +93,9 @@ namespace AgriConnect.Views
                 Text = "farmer.jean@agriconnect.rw",
                 Location = new Point(45, y),
                 Size = new Size(395, 30),
-                Font = new Font("Segoe UI", 10.5f)
+                Font = new Font("Segoe UI", 10.5f),
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary
             };
             y += 42;
 
@@ -98,7 +104,8 @@ namespace AgriConnect.Views
                 Text = "Password:",
                 Location = new Point(45, y),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold)
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary
             };
             y += 26;
 
@@ -108,7 +115,9 @@ namespace AgriConnect.Views
                 PasswordChar = '●',
                 Location = new Point(45, y),
                 Size = new Size(395, 30),
-                Font = new Font("Segoe UI", 10.5f)
+                Font = new Font("Segoe UI", 10.5f),
+                BackColor = AppTheme.OffWhite,
+                ForeColor = AppTheme.TextPrimary
             };
             y += 34;
 
@@ -117,40 +126,33 @@ namespace AgriConnect.Views
                 Text = "Show Password",
                 Location = new Point(45, y),
                 AutoSize = true,
-                Font = new Font("Segoe UI", 8.5f)
+                Font = new Font("Segoe UI", 8.5f),
+                ForeColor = AppTheme.TextSecondary
             };
             chkShowPass.CheckedChanged += (s, e) => txtPassword.PasswordChar = chkShowPass.Checked ? '\0' : '●';
-            y += 34;
+            y += 32;
 
             btnLogin = new Button
             {
                 Text = "Sign In",
-                BackColor = Color.FromArgb(46, 125, 50),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 11f, FontStyle.Bold),
                 Location = new Point(45, y),
-                Size = new Size(395, 42),
-                Cursor = Cursors.Hand
+                Size = new Size(395, 42)
             };
-            btnLogin.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnLogin);
             btnLogin.Click += BtnLogin_Click;
             y += 50;
 
             btnRegister = new Button
             {
                 Text = "Don't have an account? Register Here",
-                BackColor = Color.FromArgb(245, 245, 245),
-                ForeColor = Color.FromArgb(46, 125, 50),
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
                 Location = new Point(45, y),
-                Size = new Size(395, 36),
-                Cursor = Cursors.Hand
+                Size = new Size(395, 36)
             };
-            btnRegister.FlatAppearance.BorderColor = Color.FromArgb(200, 200, 200);
+            AppTheme.StyleSecondaryButton(btnRegister);
             btnRegister.Click += BtnRegister_Click;
-            y += 50;
+            y += 52;
 
             // Quick Demo Accounts Bar
             lblQuickDemo = new Label
@@ -159,7 +161,7 @@ namespace AgriConnect.Views
                 Location = new Point(45, y),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 8.5f, FontStyle.Italic),
-                ForeColor = Color.Gray
+                ForeColor = AppTheme.TextSecondary
             };
             y += 22;
 
@@ -176,10 +178,10 @@ namespace AgriConnect.Views
                 {
                     Text = label,
                     BackColor = color,
-                    ForeColor = Color.White,
+                    ForeColor = AppTheme.White,
                     FlatStyle = FlatStyle.Flat,
                     Font = new Font("Segoe UI", 8f, FontStyle.Bold),
-                    Size = new Size(76, 26),
+                    Size = new Size(76, 28),
                     Margin = new Padding(2),
                     Cursor = Cursors.Hand
                 };
@@ -193,11 +195,11 @@ namespace AgriConnect.Views
                 pnlDemo.Controls.Add(b);
             }
 
-            AddDemoButton("Admin", "admin@agriconnect.rw", "admin123", Color.FromArgb(66, 66, 66));
-            AddDemoButton("Farmer", "farmer.jean@agriconnect.rw", "farmer123", Color.FromArgb(46, 125, 50));
-            AddDemoButton("Buyer", "buyer.kigali@agriconnect.rw", "buyer123", Color.FromArgb(21, 101, 192));
-            AddDemoButton("Transporter", "transporter.eric@agriconnect.rw", "driver123", Color.FromArgb(230, 81, 0));
-            AddDemoButton("Agronomist", "agronomist.alice@agriconnect.rw", "agri123", Color.FromArgb(106, 27, 154));
+            AddDemoButton("Admin", "admin@agriconnect.rw", "admin123", AppTheme.Charcoal);
+            AddDemoButton("Farmer", "farmer.jean@agriconnect.rw", "farmer123", AppTheme.DarkGrey);
+            AddDemoButton("Buyer", "buyer.kigali@agriconnect.rw", "buyer123", AppTheme.MediumGrey);
+            AddDemoButton("Transporter", "transporter.eric@agriconnect.rw", "driver123", AppTheme.MutedGrey);
+            AddDemoButton("Agronomist", "agronomist.alice@agriconnect.rw", "agri123", AppTheme.DeepCharcoal);
 
             Controls.AddRange(new Control[]
             {

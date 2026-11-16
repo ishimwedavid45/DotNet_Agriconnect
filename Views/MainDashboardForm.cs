@@ -1,6 +1,7 @@
 using System.Data;
 using System.Text.Json;
 using AgriConnect.Controllers;
+using AgriConnect.Helpers;
 using AgriConnect.Models;
 using AgriConnect.Repositories;
 
@@ -63,7 +64,7 @@ namespace AgriConnect.Views
             Size = new Size(1280, 800);
             MinimumSize = new Size(1100, 700);
             StartPosition = FormStartPosition.CenterScreen;
-            BackColor = Color.FromArgb(244, 246, 248);
+            BackColor = AppTheme.OffWhite;
             Font = new Font("Segoe UI", 9.5f);
 
             BuildHeader();
@@ -81,14 +82,14 @@ namespace AgriConnect.Views
             {
                 Dock = DockStyle.Top,
                 Height = 65,
-                BackColor = Color.FromArgb(34, 112, 45)
+                BackColor = AppTheme.Charcoal
             };
 
             lblBrand = new Label
             {
                 Text = "🌱 AgriConnect Rwanda",
                 Font = new Font("Segoe UI", 15f, FontStyle.Bold),
-                ForeColor = Color.White,
+                ForeColor = AppTheme.White,
                 Location = new Point(18, 16),
                 AutoSize = true
             };
@@ -97,7 +98,7 @@ namespace AgriConnect.Views
             {
                 Text = "👤 Loading...",
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(240, 248, 240),
+                ForeColor = AppTheme.OffWhite,
                 Location = new Point(340, 22),
                 AutoSize = true
             };
@@ -107,7 +108,9 @@ namespace AgriConnect.Views
                 DropDownStyle = ComboBoxStyle.DropDownList,
                 Location = new Point(880, 19),
                 Size = new Size(110, 26),
-                Font = new Font("Segoe UI", 9f)
+                Font = new Font("Segoe UI", 9f),
+                BackColor = AppTheme.DarkGrey,
+                ForeColor = AppTheme.White
             };
             cmbLanguage.Items.AddRange(new object[] { "English", "Kinyarwanda", "Français" });
             cmbLanguage.SelectedItem = AppSession.CurrentLanguage;
@@ -120,29 +123,21 @@ namespace AgriConnect.Views
             btnSwitchUser = new Button
             {
                 Text = "⚡ Switch Role",
-                BackColor = Color.FromArgb(255, 179, 0),
-                ForeColor = Color.FromArgb(30, 30, 30),
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
                 Location = new Point(1005, 17),
-                Size = new Size(115, 30),
-                Cursor = Cursors.Hand
+                Size = new Size(115, 30)
             };
-            btnSwitchUser.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleMutedButton(btnSwitchUser);
             btnSwitchUser.Click += BtnSwitchUser_Click;
 
             btnLogout = new Button
             {
                 Text = "Logout",
-                BackColor = Color.FromArgb(198, 40, 40),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
                 Location = new Point(1130, 17),
-                Size = new Size(80, 30),
-                Cursor = Cursors.Hand
+                Size = new Size(80, 30)
             };
-            btnLogout.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnLogout);
             btnLogout.Click += (s, e) =>
             {
                 AppSession.Logout();
@@ -158,7 +153,7 @@ namespace AgriConnect.Views
             {
                 Dock = DockStyle.Left,
                 Width = 220,
-                BackColor = Color.FromArgb(27, 94, 32)
+                BackColor = AppTheme.DeepCharcoal
             };
 
             string[] tabs = {
@@ -182,7 +177,7 @@ namespace AgriConnect.Views
                     Dock = DockStyle.Top,
                     Height = 46,
                     BackColor = Color.Transparent,
-                    ForeColor = Color.White,
+                    ForeColor = AppTheme.SlateBorder,
                     FlatStyle = FlatStyle.Flat,
                     Font = new Font("Segoe UI", 10f, FontStyle.Bold),
                     TextAlign = ContentAlignment.MiddleLeft,
@@ -190,7 +185,7 @@ namespace AgriConnect.Views
                     Cursor = Cursors.Hand
                 };
                 btn.FlatAppearance.BorderSize = 0;
-                btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(46, 125, 50);
+                btn.FlatAppearance.MouseOverBackColor = AppTheme.DarkGrey;
                 btn.Click += (s, e) => SwitchToTab(btn.Tag?.ToString() ?? "Overview");
                 _navButtons.Add(btn);
             }
@@ -207,7 +202,7 @@ namespace AgriConnect.Views
             pnlContent = new Panel
             {
                 Dock = DockStyle.Fill,
-                BackColor = Color.FromArgb(244, 246, 248),
+                BackColor = AppTheme.OffWhite,
                 Padding = new Padding(15)
             };
 
@@ -232,8 +227,8 @@ namespace AgriConnect.Views
             foreach (var btn in _navButtons)
             {
                 bool active = btn.Tag?.ToString() == tabName;
-                btn.BackColor = active ? Color.FromArgb(46, 125, 50) : Color.Transparent;
-                btn.ForeColor = active ? Color.FromArgb(255, 235, 59) : Color.White;
+                btn.BackColor = active ? AppTheme.DarkGrey : Color.Transparent;
+                btn.ForeColor = active ? AppTheme.White : AppTheme.SlateBorder;
             }
 
             pnlOverview.Visible = tabName == "Overview";
@@ -329,13 +324,13 @@ namespace AgriConnect.Views
 
         private Panel CreateOverviewPanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblHeading = new Label
             {
                 Text = "📊 AgriConnect Rwanda Dashboard & System Overview",
                 Font = new Font("Segoe UI", 14f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(33, 37, 41),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -349,20 +344,21 @@ namespace AgriConnect.Views
                 FlowDirection = FlowDirection.LeftToRight
             };
 
-            Panel CreateCard(string title, out Label valLabel, Color bg, Color textCol)
+            Panel CreateCard(string title, out Label valLabel)
             {
                 var card = new Panel
                 {
                     Size = new Size(240, 95),
-                    BackColor = bg,
+                    BackColor = AppTheme.White,
                     Margin = new Padding(6),
-                    Padding = new Padding(12)
+                    Padding = new Padding(12),
+                    BorderStyle = BorderStyle.FixedSingle
                 };
                 var lTitle = new Label
                 {
                     Text = title,
                     Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                    ForeColor = textCol,
+                    ForeColor = AppTheme.TextSecondary,
                     Dock = DockStyle.Top,
                     Height = 22
                 };
@@ -370,7 +366,7 @@ namespace AgriConnect.Views
                 {
                     Text = "...",
                     Font = new Font("Segoe UI", 16f, FontStyle.Bold),
-                    ForeColor = textCol,
+                    ForeColor = AppTheme.TextPrimary,
                     Dock = DockStyle.Fill
                 };
                 card.Controls.Add(valLabel);
@@ -378,10 +374,10 @@ namespace AgriConnect.Views
                 return card;
             }
 
-            flpCards.Controls.Add(CreateCard("Active Produce Listings", out lblStatListings, Color.White, Color.FromArgb(46, 125, 50)));
-            flpCards.Controls.Add(CreateCard("Total Marketplace Orders", out lblStatOrders, Color.White, Color.FromArgb(21, 101, 192)));
-            flpCards.Controls.Add(CreateCard("Total Trade Volume", out lblStatVolume, Color.White, Color.FromArgb(230, 81, 0)));
-            flpCards.Controls.Add(CreateCard("Held in Escrow Protection", out lblStatEscrow, Color.White, Color.FromArgb(106, 27, 154)));
+            flpCards.Controls.Add(CreateCard("Active Produce Listings", out lblStatListings));
+            flpCards.Controls.Add(CreateCard("Total Marketplace Orders", out lblStatOrders));
+            flpCards.Controls.Add(CreateCard("Total Trade Volume", out lblStatVolume));
+            flpCards.Controls.Add(CreateCard("Held in Escrow Protection", out lblStatEscrow));
             pnl.Controls.Add(flpCards);
 
             // Weather & Climate Alert Card
@@ -389,7 +385,7 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 170),
                 Size = new Size(1005, 100),
-                BackColor = Color.FromArgb(227, 242, 253),
+                BackColor = AppTheme.LightGrey,
                 BorderStyle = BorderStyle.FixedSingle,
                 Padding = new Padding(12)
             };
@@ -397,7 +393,7 @@ namespace AgriConnect.Views
             {
                 Text = "🌦️ Rwanda Meteorological Agency (Meteo Rwanda) Advisory & Weather Feed",
                 Font = new Font("Segoe UI", 10.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(13, 71, 161),
+                ForeColor = AppTheme.Charcoal,
                 Dock = DockStyle.Top,
                 Height = 24
             };
@@ -405,7 +401,7 @@ namespace AgriConnect.Views
             {
                 Text = "Musanze & Northern Province: High rainfall expected in volcanic zone. Protect Irish potato ridges against waterlogging.\nEastern Province (Nyagatare): Moderate temperatures, favorable harvesting weather for maize & beans.",
                 Font = new Font("Segoe UI", 9.5f),
-                ForeColor = Color.FromArgb(33, 33, 33),
+                ForeColor = AppTheme.TextPrimary,
                 Dock = DockStyle.Fill
             };
             pnlWeatherCard.Controls.Add(lblWeather);
@@ -417,32 +413,31 @@ namespace AgriConnect.Views
             {
                 Text = "Quick Role Shortcuts",
                 Font = new Font("Segoe UI", 10f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
+                BackColor = AppTheme.White,
                 Location = new Point(15, 290),
                 Size = new Size(1005, 110)
             };
 
-            Button MakeActionBtn(string text, Color c, Action act, int x)
+            Button MakeActionBtn(string text, Action act, int x, bool primary = false)
             {
                 var b = new Button
                 {
                     Text = text,
-                    BackColor = c,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
                     Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
                     Location = new Point(x, 35),
-                    Size = new Size(225, 45),
-                    Cursor = Cursors.Hand
+                    Size = new Size(225, 45)
                 };
-                b.FlatAppearance.BorderSize = 0;
+                if (primary) AppTheme.StylePrimaryButton(b);
+                else AppTheme.StyleSecondaryButton(b);
                 b.Click += (s, e) => act();
                 return b;
             }
 
-            pnlShortcuts.Controls.Add(MakeActionBtn("🌾 Manage My Crops", Color.FromArgb(46, 125, 50), () => SwitchToTab("Farmer"), 20));
-            pnlShortcuts.Controls.Add(MakeActionBtn("🛒 Browse & Buy Produce", Color.FromArgb(21, 101, 192), () => SwitchToTab("Marketplace"), 265));
-            pnlShortcuts.Controls.Add(MakeActionBtn("📦 Orders & Escrow Tracking", Color.FromArgb(230, 81, 0), () => SwitchToTab("Orders"), 510));
-            pnlShortcuts.Controls.Add(MakeActionBtn("🗄️ Inspect Database GUI", Color.FromArgb(66, 66, 66), () => SwitchToTab("Database"), 755));
+            pnlShortcuts.Controls.Add(MakeActionBtn("🌾 Manage My Crops", () => SwitchToTab("Farmer"), 20, true));
+            pnlShortcuts.Controls.Add(MakeActionBtn("🛒 Browse & Buy Produce", () => SwitchToTab("Marketplace"), 265));
+            pnlShortcuts.Controls.Add(MakeActionBtn("📦 Orders & Escrow Tracking", () => SwitchToTab("Orders"), 510));
+            pnlShortcuts.Controls.Add(MakeActionBtn("🗄️ Inspect Database GUI", () => SwitchToTab("Database"), 755));
             pnl.Controls.Add(pnlShortcuts);
 
             // System highlights summary
@@ -452,9 +447,9 @@ namespace AgriConnect.Views
                        "• MVC Architecture: Controllers mediate business logic between WinForms Views and persistent Models.\n" +
                        "• Direct GUI Database Interaction: Browse, query, and mutate all database tables with real-time persistence.\n" +
                        "• Escrow Payment Security: Funds held in escrow via MTN MoMo / Airtel Money simulation until buyer confirms delivery.\n" +
-                       "• Multilingual Support: Switch between English, Kinyarwanda, and French on demand.",
+                       "• Professional Design: Styled in an enterprise grey and white monochrome aesthetic with high legibility.",
                 Font = new Font("Segoe UI", 9.5f),
-                ForeColor = Color.FromArgb(80, 80, 80),
+                ForeColor = AppTheme.TextSecondary,
                 Location = new Point(15, 420),
                 Size = new Size(1005, 120)
             };
@@ -481,12 +476,13 @@ namespace AgriConnect.Views
 
         private Panel CreateFarmerPanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblTitle = new Label
             {
                 Text = "🌾 Farmer Produce & Order Management Center",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -497,7 +493,7 @@ namespace AgriConnect.Views
             {
                 Text = "Earnings Summary: Today: RWF 0 | This Week: RWF 0 | This Month: RWF 0 | Total: RWF 0",
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(46, 125, 50),
+                ForeColor = AppTheme.Charcoal,
                 Location = new Point(15, 40),
                 Size = new Size(1000, 25)
             };
@@ -511,25 +507,22 @@ namespace AgriConnect.Views
                 FlowDirection = FlowDirection.LeftToRight
             };
 
-            Button MakeBtn(string text, Color c, Action act)
+            Button MakeBtn(string text, Action act, bool primary = false)
             {
                 var b = new Button
                 {
                     Text = text,
-                    BackColor = c,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
                     Font = new Font("Segoe UI", 9f, FontStyle.Bold),
                     Size = new Size(150, 32),
-                    Margin = new Padding(0, 0, 10, 0),
-                    Cursor = Cursors.Hand
+                    Margin = new Padding(0, 0, 10, 0)
                 };
-                b.FlatAppearance.BorderSize = 0;
+                if (primary) AppTheme.StylePrimaryButton(b);
+                else AppTheme.StyleSecondaryButton(b);
                 b.Click += (s, e) => act();
                 return b;
             }
 
-            pnlTools.Controls.Add(MakeBtn("➕ List New Produce", Color.FromArgb(46, 125, 50), () =>
+            pnlTools.Controls.Add(MakeBtn("➕ List New Produce", () =>
             {
                 using var dlg = new AddEditListingDialog();
                 if (dlg.ShowDialog() == DialogResult.OK && dlg.ResultListing != null)
@@ -538,9 +531,9 @@ namespace AgriConnect.Views
                     MessageBox.Show(msg, "Produce Listing", MessageBoxButtons.OK, succ ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
                     RefreshFarmer();
                 }
-            }));
+            }, true));
 
-            pnlTools.Controls.Add(MakeBtn("✏️ Edit Selected", Color.FromArgb(21, 101, 192), () =>
+            pnlTools.Controls.Add(MakeBtn("✏️ Edit Selected", () =>
             {
                 var sel = GetSelectedFarmerListing();
                 if (sel == null) return;
@@ -553,7 +546,7 @@ namespace AgriConnect.Views
                 }
             }));
 
-            pnlTools.Controls.Add(MakeBtn("⏯️ Pause / Activate", Color.FromArgb(230, 81, 0), () =>
+            pnlTools.Controls.Add(MakeBtn("⏯️ Pause / Activate", () =>
             {
                 var sel = GetSelectedFarmerListing();
                 if (sel == null) return;
@@ -562,7 +555,7 @@ namespace AgriConnect.Views
                 RefreshFarmer();
             }));
 
-            pnlTools.Controls.Add(MakeBtn("🗑️ Remove Listing", Color.FromArgb(198, 40, 40), () =>
+            pnlTools.Controls.Add(MakeBtn("🗑️ Remove Listing", () =>
             {
                 var sel = GetSelectedFarmerListing();
                 if (sel == null) return;
@@ -576,23 +569,20 @@ namespace AgriConnect.Views
             pnl.Controls.Add(pnlTools);
 
             // Listings Grid
-            var lblGridTitle = new Label { Text = "My Active & Paused Listings:", Location = new Point(15, 115), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold) };
+            var lblGridTitle = new Label { Text = "My Active & Paused Listings:", Location = new Point(15, 115), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
             pnl.Controls.Add(lblGridTitle);
 
             dgvFarmerListings = new DataGridView
             {
                 Location = new Point(15, 140),
                 Size = new Size(1005, 200),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvFarmerListings);
             pnl.Controls.Add(dgvFarmerListings);
 
             // Incoming Orders Section
-            var lblOrdersTitle = new Label { Text = "Incoming Customer Orders (Accept / Dispatch):", Location = new Point(15, 355), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold) };
+            var lblOrdersTitle = new Label { Text = "Incoming Customer Orders (Accept / Dispatch):", Location = new Point(15, 355), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
             pnl.Controls.Add(lblOrdersTitle);
 
             var pnlOrderTools = new FlowLayoutPanel
@@ -602,16 +592,16 @@ namespace AgriConnect.Views
                 FlowDirection = FlowDirection.LeftToRight
             };
 
-            pnlOrderTools.Controls.Add(MakeBtn("✅ Accept Order", Color.FromArgb(46, 125, 50), () =>
+            pnlOrderTools.Controls.Add(MakeBtn("✅ Accept Order", () =>
             {
                 var ord = GetSelectedFarmerOrder();
                 if (ord == null) return;
                 var (succ, msg) = _farmerCtrl.AcceptOrder(ord.OrderId);
                 MessageBox.Show(msg, "Order Status", MessageBoxButtons.OK, succ ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
                 RefreshFarmer();
-            }));
+            }, true));
 
-            pnlOrderTools.Controls.Add(MakeBtn("📦 Mark Produce Ready", Color.FromArgb(21, 101, 192), () =>
+            pnlOrderTools.Controls.Add(MakeBtn("📦 Mark Produce Ready", () =>
             {
                 var ord = GetSelectedFarmerOrder();
                 if (ord == null) return;
@@ -620,7 +610,7 @@ namespace AgriConnect.Views
                 RefreshFarmer();
             }));
 
-            pnlOrderTools.Controls.Add(MakeBtn("❌ Reject Order", Color.FromArgb(198, 40, 40), () =>
+            pnlOrderTools.Controls.Add(MakeBtn("❌ Reject Order", () =>
             {
                 var ord = GetSelectedFarmerOrder();
                 if (ord == null) return;
@@ -635,12 +625,9 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 420),
                 Size = new Size(1005, 230),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvFarmerOrders);
             pnl.Controls.Add(dgvFarmerOrders);
 
             return pnl;
@@ -670,7 +657,7 @@ namespace AgriConnect.Views
 
         private void RefreshFarmer()
         {
-            int farmerId = AppSession.CurrentUser?.Role == UserRole.Farmer ? AppSession.CurrentUser.UserId : 2; // fallback to Jean Claude for admin preview
+            int farmerId = AppSession.CurrentUser?.Role == UserRole.Farmer ? AppSession.CurrentUser.UserId : 2;
             var listings = _farmerCtrl.GetMyListings(farmerId);
             dgvFarmerListings.DataSource = listings.Select(l => new
             {
@@ -714,12 +701,13 @@ namespace AgriConnect.Views
 
         private Panel CreateBuyerPanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblTitle = new Label
             {
                 Text = "🛒 Rwanda Produce Marketplace & Smart Shopping",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -730,28 +718,28 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 45),
                 Size = new Size(1005, 45),
-                BackColor = Color.White,
+                BackColor = AppTheme.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            var lblSearch = new Label { Text = "Search:", Location = new Point(10, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            txtSearchMarket = new TextBox { Location = new Point(65, 9), Size = new Size(180, 24) };
+            var lblSearch = new Label { Text = "Search:", Location = new Point(10, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            txtSearchMarket = new TextBox { Location = new Point(65, 9), Size = new Size(180, 24), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             txtSearchMarket.TextChanged += (s, e) => RefreshBuyer();
 
-            var lblCat = new Label { Text = "Category:", Location = new Point(260, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            cmbCatFilter = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(330, 9), Size = new Size(130, 24) };
+            var lblCat = new Label { Text = "Category:", Location = new Point(260, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            cmbCatFilter = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(330, 9), Size = new Size(130, 24), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             cmbCatFilter.Items.AddRange(new object[] { "All Categories", "Tubers", "Cereals", "Vegetables", "Legumes", "Fruits", "Coffee & Tea" });
             cmbCatFilter.SelectedIndex = 0;
             cmbCatFilter.SelectedIndexChanged += (s, e) => RefreshBuyer();
 
-            var lblDist = new Label { Text = "District:", Location = new Point(475, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            cmbDistrictFilter = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(535, 9), Size = new Size(120, 24) };
+            var lblDist = new Label { Text = "District:", Location = new Point(475, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            cmbDistrictFilter = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(535, 9), Size = new Size(120, 24), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             cmbDistrictFilter.Items.AddRange(new object[] { "All Districts", "Musanze", "Nyagatare", "Rubavu", "Huye", "Gasabo", "Kicukiro" });
             cmbDistrictFilter.SelectedIndex = 0;
             cmbDistrictFilter.SelectedIndexChanged += (s, e) => RefreshBuyer();
 
-            var lblSort = new Label { Text = "Sort:", Location = new Point(670, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            cmbSortFilter = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(710, 9), Size = new Size(150, 24) };
+            var lblSort = new Label { Text = "Sort:", Location = new Point(670, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            cmbSortFilter = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(710, 9), Size = new Size(150, 24), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             cmbSortFilter.Items.AddRange(new object[] { "Newest Listings", "Price: Low to High", "Price: High to Low", "Quantity Available" });
             cmbSortFilter.SelectedIndex = 0;
             cmbSortFilter.SelectedIndexChanged += (s, e) => RefreshBuyer();
@@ -760,9 +748,9 @@ namespace AgriConnect.Views
             {
                 Text = "Reset",
                 Location = new Point(880, 8),
-                Size = new Size(70, 26),
-                FlatStyle = FlatStyle.Flat
+                Size = new Size(70, 26)
             };
+            AppTheme.StyleSecondaryButton(btnResetFilters);
             btnResetFilters.Click += (s, e) =>
             {
                 txtSearchMarket.Clear();
@@ -783,12 +771,9 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 100),
                 Size = new Size(1005, 350),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvMarketplace);
             pnl.Controls.Add(dgvMarketplace);
 
             // Purchase / Cart Bar
@@ -796,26 +781,22 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 465),
                 Size = new Size(1005, 75),
-                BackColor = Color.White,
+                BackColor = AppTheme.White,
                 BorderStyle = BorderStyle.FixedSingle,
                 Padding = new Padding(10)
             };
 
-            var lblQty = new Label { Text = "Quantity to Order:", Location = new Point(15, 25), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold) };
-            numBuyQty = new NumericUpDown { Location = new Point(150, 23), Size = new Size(100, 26), Minimum = 1, Maximum = 10000, Value = 10 };
+            var lblQty = new Label { Text = "Quantity to Order:", Location = new Point(15, 25), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            numBuyQty = new NumericUpDown { Location = new Point(150, 23), Size = new Size(100, 26), Minimum = 1, Maximum = 10000, Value = 10, BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
 
             var btnAddToCart = new Button
             {
                 Text = "🛒 Add to Cart",
-                BackColor = Color.FromArgb(46, 125, 50),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
                 Location = new Point(270, 20),
-                Size = new Size(140, 34),
-                Cursor = Cursors.Hand
+                Size = new Size(140, 34)
             };
-            btnAddToCart.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnAddToCart);
             btnAddToCart.Click += (s, e) =>
             {
                 if (dgvMarketplace.SelectedRows.Count == 0)
@@ -837,7 +818,7 @@ namespace AgriConnect.Views
             {
                 Text = "Cart: 0 items (RWF 0)",
                 Font = new Font("Segoe UI", 10f, FontStyle.Bold),
-                ForeColor = Color.FromArgb(21, 101, 192),
+                ForeColor = AppTheme.Charcoal,
                 Location = new Point(440, 25),
                 Size = new Size(280, 26)
             };
@@ -845,15 +826,11 @@ namespace AgriConnect.Views
             var btnViewCheckout = new Button
             {
                 Text = "🔒 Checkout & Escrow Pay",
-                BackColor = Color.FromArgb(245, 124, 0),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 10f, FontStyle.Bold),
                 Location = new Point(730, 18),
-                Size = new Size(200, 38),
-                Cursor = Cursors.Hand
+                Size = new Size(200, 38)
             };
-            btnViewCheckout.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnViewCheckout);
             btnViewCheckout.Click += (s, e) =>
             {
                 if (!AppSession.Cart.Any())
@@ -874,9 +851,9 @@ namespace AgriConnect.Views
             {
                 Text = "Clear",
                 Location = new Point(940, 23),
-                Size = new Size(50, 28),
-                FlatStyle = FlatStyle.Flat
+                Size = new Size(50, 28)
             };
+            AppTheme.StyleSecondaryButton(btnClearCart);
             btnClearCart.Click += (s, e) =>
             {
                 _buyerCtrl.ClearCart();
@@ -929,12 +906,13 @@ namespace AgriConnect.Views
 
         private Panel CreateOrdersPanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblTitle = new Label
             {
                 Text = "📦 Order History & Escrow Settlement Tracker",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -947,25 +925,22 @@ namespace AgriConnect.Views
                 FlowDirection = FlowDirection.LeftToRight
             };
 
-            Button MakeBtn(string text, Color c, Action act)
+            Button MakeBtn(string text, Action act, bool primary = false)
             {
                 var b = new Button
                 {
                     Text = text,
-                    BackColor = c,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
                     Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                    Size = new Size(190, 32),
-                    Margin = new Padding(0, 0, 10, 0),
-                    Cursor = Cursors.Hand
+                    Size = new Size(200, 32),
+                    Margin = new Padding(0, 0, 10, 0)
                 };
-                b.FlatAppearance.BorderSize = 0;
+                if (primary) AppTheme.StylePrimaryButton(b);
+                else AppTheme.StyleSecondaryButton(b);
                 b.Click += (s, e) => act();
                 return b;
             }
 
-            pnlActions.Controls.Add(MakeBtn("✅ Confirm Delivery (Release Escrow)", Color.FromArgb(46, 125, 50), () =>
+            pnlActions.Controls.Add(MakeBtn("✅ Confirm Delivery (Release)", () =>
             {
                 var ord = GetSelectedOrder();
                 if (ord == null) return;
@@ -978,11 +953,13 @@ namespace AgriConnect.Views
                     FormBorderStyle = FormBorderStyle.FixedDialog,
                     MaximizeBox = false,
                     MinimizeBox = false,
+                    BackColor = AppTheme.White,
                     Font = new Font("Segoe UI", 9.5f)
                 };
-                var lblP = new Label { Text = $"Enter Delivery Code for Order #{ord.OrderId}:", Location = new Point(20, 20), AutoSize = true };
-                var txtC = new TextBox { Location = new Point(20, 50), Size = new Size(320, 28), Text = ord.DeliveryCode };
-                var btnOk = new Button { Text = "Release Escrow", DialogResult = DialogResult.OK, Location = new Point(180, 100), Size = new Size(120, 32), BackColor = Color.FromArgb(46, 125, 50), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+                var lblP = new Label { Text = $"Enter Delivery Code for Order #{ord.OrderId}:", Location = new Point(20, 20), AutoSize = true, ForeColor = AppTheme.TextPrimary };
+                var txtC = new TextBox { Location = new Point(20, 50), Size = new Size(320, 28), Text = ord.DeliveryCode, BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
+                var btnOk = new Button { Text = "Release Escrow", DialogResult = DialogResult.OK, Location = new Point(180, 100), Size = new Size(130, 34) };
+                AppTheme.StylePrimaryButton(btnOk);
                 codeForm.Controls.AddRange(new Control[] { lblP, txtC, btnOk });
                 codeForm.AcceptButton = btnOk;
 
@@ -992,9 +969,9 @@ namespace AgriConnect.Views
                     MessageBox.Show(msg, "Escrow Settlement", MessageBoxButtons.OK, succ ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
                     RefreshOrders();
                 }
-            }));
+            }, true));
 
-            pnlActions.Controls.Add(MakeBtn("⚠️ Open Dispute", Color.FromArgb(198, 40, 40), () =>
+            pnlActions.Controls.Add(MakeBtn("⚠️ Open Dispute", () =>
             {
                 var ord = GetSelectedOrder();
                 if (ord == null) return;
@@ -1005,7 +982,7 @@ namespace AgriConnect.Views
                 }
             }));
 
-            pnlActions.Controls.Add(MakeBtn("❌ Cancel Order", Color.FromArgb(100, 100, 100), () =>
+            pnlActions.Controls.Add(MakeBtn("❌ Cancel Order", () =>
             {
                 var ord = GetSelectedOrder();
                 if (ord == null) return;
@@ -1020,12 +997,9 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 95),
                 Size = new Size(1005, 500),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                MultiSelect = false,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvOrdersList);
             pnl.Controls.Add(dgvOrdersList);
 
             return pnl;
@@ -1075,12 +1049,13 @@ namespace AgriConnect.Views
 
         private Panel CreateMarketPanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblTitle = new Label
             {
                 Text = "📈 National Agricultural Market Price Intelligence & Trends",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -1090,11 +1065,11 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 45),
                 Size = new Size(1005, 40),
-                BackColor = Color.White,
+                BackColor = AppTheme.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
-            var lblD = new Label { Text = "Filter by Market / District:", Location = new Point(15, 10), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            cmbPriceDistrict = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(190, 7), Size = new Size(200, 24) };
+            var lblD = new Label { Text = "Filter by Market / District:", Location = new Point(15, 10), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            cmbPriceDistrict = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(190, 7), Size = new Size(200, 24), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             cmbPriceDistrict.Items.AddRange(new object[] { "All Rwanda Markets", "Kigali (Kimironko)", "Musanze Central", "Nyagatare Market", "Huye Market", "Rubavu Border" });
             cmbPriceDistrict.SelectedIndex = 0;
             cmbPriceDistrict.SelectedIndexChanged += (s, e) => RefreshMarket();
@@ -1106,11 +1081,9 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 95),
                 Size = new Size(1005, 500),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvMarketPrices);
             pnl.Controls.Add(dgvMarketPrices);
 
             return pnl;
@@ -1148,20 +1121,21 @@ namespace AgriConnect.Views
 
         private Panel CreateAdvisoryPanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblTitle = new Label
             {
                 Text = "📚 Rwanda Agriculture Board (RAB) Advisory & Extension Service",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
             pnl.Controls.Add(lblTitle);
 
             // Language filter
-            var lblLang = new Label { Text = "Article Language:", Location = new Point(15, 45), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            cmbAdvisoryLang = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(135, 42), Size = new Size(130, 24) };
+            var lblLang = new Label { Text = "Article Language:", Location = new Point(15, 45), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            cmbAdvisoryLang = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(135, 42), Size = new Size(130, 24), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             cmbAdvisoryLang.Items.AddRange(new object[] { "All", "English", "Kinyarwanda", "French" });
             cmbAdvisoryLang.SelectedIndex = 0;
             cmbAdvisoryLang.SelectedIndexChanged += (s, e) => RefreshAdvisory();
@@ -1172,7 +1146,10 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 75),
                 Size = new Size(380, 250),
-                Font = new Font("Segoe UI", 9.5f)
+                Font = new Font("Segoe UI", 9.5f),
+                BackColor = AppTheme.White,
+                ForeColor = AppTheme.TextPrimary,
+                BorderStyle = BorderStyle.FixedSingle
             };
             lstArticles.SelectedIndexChanged += (s, e) =>
             {
@@ -1189,9 +1166,11 @@ namespace AgriConnect.Views
                 Size = new Size(610, 250),
                 Multiline = true,
                 ReadOnly = true,
-                BackColor = Color.White,
+                BackColor = AppTheme.White,
+                ForeColor = AppTheme.TextPrimary,
                 Font = new Font("Segoe UI", 10f),
-                ScrollBars = ScrollBars.Vertical
+                ScrollBars = ScrollBars.Vertical,
+                BorderStyle = BorderStyle.FixedSingle
             };
             pnl.Controls.Add(txtArticleBody);
 
@@ -1200,6 +1179,7 @@ namespace AgriConnect.Views
             {
                 Text = "Farmer Questions & Agronomist Answers (FR-9.3):",
                 Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 335),
                 AutoSize = true
             };
@@ -1208,15 +1188,11 @@ namespace AgriConnect.Views
             var btnAsk = new Button
             {
                 Text = "❓ Ask Agronomist a Question",
-                BackColor = Color.FromArgb(46, 125, 50),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
                 Location = new Point(410, 332),
-                Size = new Size(210, 30),
-                Cursor = Cursors.Hand
+                Size = new Size(210, 30)
             };
-            btnAsk.FlatAppearance.BorderSize = 0;
+            AppTheme.StylePrimaryButton(btnAsk);
             btnAsk.Click += (s, e) =>
             {
                 using var askForm = new Form
@@ -1226,13 +1202,15 @@ namespace AgriConnect.Views
                     StartPosition = FormStartPosition.CenterParent,
                     FormBorderStyle = FormBorderStyle.FixedDialog,
                     MaximizeBox = false,
+                    BackColor = AppTheme.White,
                     Font = new Font("Segoe UI", 9.5f)
                 };
-                var l1 = new Label { Text = "Subject *:", Location = new Point(20, 20), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-                var tSub = new TextBox { Location = new Point(20, 45), Size = new Size(420, 26) };
-                var l2 = new Label { Text = "Question / Disease Description *:", Location = new Point(20, 85), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-                var tQ = new TextBox { Location = new Point(20, 110), Size = new Size(420, 130), Multiline = true };
-                var bSub = new Button { Text = "Submit Question", DialogResult = DialogResult.OK, Location = new Point(290, 260), Size = new Size(150, 34), BackColor = Color.FromArgb(46, 125, 50), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+                var l1 = new Label { Text = "Subject *:", Location = new Point(20, 20), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+                var tSub = new TextBox { Location = new Point(20, 45), Size = new Size(420, 26), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
+                var l2 = new Label { Text = "Question / Disease Description *:", Location = new Point(20, 85), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+                var tQ = new TextBox { Location = new Point(20, 110), Size = new Size(420, 130), Multiline = true, BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
+                var bSub = new Button { Text = "Submit Question", DialogResult = DialogResult.OK, Location = new Point(290, 260), Size = new Size(150, 34) };
+                AppTheme.StylePrimaryButton(bSub);
                 askForm.Controls.AddRange(new Control[] { l1, tSub, l2, tQ, bSub });
                 askForm.AcceptButton = bSub;
 
@@ -1255,15 +1233,11 @@ namespace AgriConnect.Views
             var btnAnswer = new Button
             {
                 Text = "✍️ Answer Selected Question",
-                BackColor = Color.FromArgb(106, 27, 154),
-                ForeColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
                 Location = new Point(630, 332),
-                Size = new Size(200, 30),
-                Cursor = Cursors.Hand
+                Size = new Size(200, 30)
             };
-            btnAnswer.FlatAppearance.BorderSize = 0;
+            AppTheme.StyleSecondaryButton(btnAnswer);
             btnAnswer.Click += (s, e) =>
             {
                 if (dgvQA.SelectedRows.Count == 0) return;
@@ -1281,11 +1255,9 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 370),
                 Size = new Size(1005, 230),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvQA);
             pnl.Controls.Add(dgvQA);
 
             return pnl;
@@ -1319,12 +1291,13 @@ namespace AgriConnect.Views
 
         private Panel CreateTransportPanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblTitle = new Label
             {
                 Text = "🚚 Rural Transporter Logistics & Dispatch Hub",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -1337,25 +1310,22 @@ namespace AgriConnect.Views
                 FlowDirection = FlowDirection.LeftToRight
             };
 
-            Button MakeBtn(string text, Color c, Action act)
+            Button MakeBtn(string text, Action act, bool primary = false)
             {
                 var b = new Button
                 {
                     Text = text,
-                    BackColor = c,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
                     Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                    Size = new Size(180, 32),
-                    Margin = new Padding(0, 0, 10, 0),
-                    Cursor = Cursors.Hand
+                    Size = new Size(190, 32),
+                    Margin = new Padding(0, 0, 10, 0)
                 };
-                b.FlatAppearance.BorderSize = 0;
+                if (primary) AppTheme.StylePrimaryButton(b);
+                else AppTheme.StyleSecondaryButton(b);
                 b.Click += (s, e) => act();
                 return b;
             }
 
-            pnlTools.Controls.Add(MakeBtn("🚚 Claim Delivery Job", Color.FromArgb(46, 125, 50), () =>
+            pnlTools.Controls.Add(MakeBtn("🚚 Claim Delivery Job", () =>
             {
                 var job = GetSelectedTransportJob();
                 if (job == null) return;
@@ -1363,9 +1333,9 @@ namespace AgriConnect.Views
                 var (succ, msg) = _transporterCtrl.AcceptDeliveryJob(job.OrderId, u?.UserId ?? 5, u?.FullName ?? "Eric Nshimiyimana");
                 MessageBox.Show(msg, "Claim Delivery", MessageBoxButtons.OK, succ ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
                 RefreshTransport();
-            }));
+            }, true));
 
-            pnlTools.Controls.Add(MakeBtn("📦 Confirm Produce Pickup", Color.FromArgb(21, 101, 192), () =>
+            pnlTools.Controls.Add(MakeBtn("📦 Confirm Produce Pickup", () =>
             {
                 var job = GetSelectedTransportJob();
                 if (job == null) return;
@@ -1374,7 +1344,7 @@ namespace AgriConnect.Views
                 RefreshTransport();
             }));
 
-            pnlTools.Controls.Add(MakeBtn("🏁 Confirm Recipient Drop-Off", Color.FromArgb(230, 81, 0), () =>
+            pnlTools.Controls.Add(MakeBtn("🏁 Confirm Recipient Drop-Off", () =>
             {
                 var job = GetSelectedTransportJob();
                 if (job == null) return;
@@ -1393,11 +1363,9 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 95),
                 Size = new Size(1005, 500),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvTransportJobs);
             pnl.Controls.Add(dgvTransportJobs);
 
             return pnl;
@@ -1443,12 +1411,13 @@ namespace AgriConnect.Views
 
         private Panel CreateAdminPanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblTitle = new Label
             {
                 Text = "🛡️ AgriConnect Administration, Governance & Compliance",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -1461,25 +1430,22 @@ namespace AgriConnect.Views
                 FlowDirection = FlowDirection.LeftToRight
             };
 
-            Button MakeBtn(string text, Color c, Action act)
+            Button MakeBtn(string text, Action act, bool primary = false)
             {
                 var b = new Button
                 {
                     Text = text,
-                    BackColor = c,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
                     Font = new Font("Segoe UI", 9f, FontStyle.Bold),
-                    Size = new Size(170, 30),
-                    Margin = new Padding(0, 0, 10, 0),
-                    Cursor = Cursors.Hand
+                    Size = new Size(180, 30),
+                    Margin = new Padding(0, 0, 10, 0)
                 };
-                b.FlatAppearance.BorderSize = 0;
+                if (primary) AppTheme.StylePrimaryButton(b);
+                else AppTheme.StyleSecondaryButton(b);
                 b.Click += (s, e) => act();
                 return b;
             }
 
-            pnlExport.Controls.Add(MakeBtn("📊 Export Orders CSV", Color.FromArgb(46, 125, 50), () =>
+            pnlExport.Controls.Add(MakeBtn("📊 Export Orders CSV", () =>
             {
                 using var sfd = new SaveFileDialog { Filter = "CSV Files (*.csv)|*.csv", FileName = "AgriConnect_Orders_Report.csv" };
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -1487,9 +1453,9 @@ namespace AgriConnect.Views
                     File.WriteAllText(sfd.FileName, _adminCtrl.ExportReportsCsv());
                     MessageBox.Show($"Report exported successfully to {sfd.FileName}", "Export Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-            }));
+            }, true));
 
-            pnlExport.Controls.Add(MakeBtn("🚫 Suspend User", Color.FromArgb(198, 40, 40), () =>
+            pnlExport.Controls.Add(MakeBtn("🚫 Suspend User", () =>
             {
                 if (dgvAdminUsers.SelectedRows.Count == 0) return;
                 int uId = Convert.ToInt32(dgvAdminUsers.SelectedRows[0].Cells["UserId"].Value);
@@ -1497,7 +1463,7 @@ namespace AgriConnect.Views
                 RefreshAdmin();
             }));
 
-            pnlExport.Controls.Add(MakeBtn("✅ Reactivate User", Color.FromArgb(21, 101, 192), () =>
+            pnlExport.Controls.Add(MakeBtn("✅ Reactivate User", () =>
             {
                 if (dgvAdminUsers.SelectedRows.Count == 0) return;
                 int uId = Convert.ToInt32(dgvAdminUsers.SelectedRows[0].Cells["UserId"].Value);
@@ -1505,7 +1471,7 @@ namespace AgriConnect.Views
                 RefreshAdmin();
             }));
 
-            pnlExport.Controls.Add(MakeBtn("⚖️ Resolve Dispute (Refund)", Color.FromArgb(230, 81, 0), () =>
+            pnlExport.Controls.Add(MakeBtn("⚖️ Dispute (Refund Buyer)", () =>
             {
                 if (dgvAdminDisputes.SelectedRows.Count == 0) return;
                 int dId = Convert.ToInt32(dgvAdminDisputes.SelectedRows[0].Cells["DisputeId"].Value);
@@ -1513,7 +1479,7 @@ namespace AgriConnect.Views
                 RefreshAdmin();
             }));
 
-            pnlExport.Controls.Add(MakeBtn("⚖️ Resolve Dispute (Release)", Color.FromArgb(46, 125, 50), () =>
+            pnlExport.Controls.Add(MakeBtn("⚖️ Dispute (Release Farmer)", () =>
             {
                 if (dgvAdminDisputes.SelectedRows.Count == 0) return;
                 int dId = Convert.ToInt32(dgvAdminDisputes.SelectedRows[0].Cells["DisputeId"].Value);
@@ -1524,48 +1490,42 @@ namespace AgriConnect.Views
             pnl.Controls.Add(pnlExport);
 
             // User accounts table
-            var lblU = new Label { Text = "Registered User Accounts:", Location = new Point(15, 90), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold) };
+            var lblU = new Label { Text = "Registered User Accounts:", Location = new Point(15, 90), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
             pnl.Controls.Add(lblU);
 
             dgvAdminUsers = new DataGridView
             {
                 Location = new Point(15, 115),
                 Size = new Size(1005, 150),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvAdminUsers);
             pnl.Controls.Add(dgvAdminUsers);
 
             // Disputes Table
-            var lblD = new Label { Text = "Escrow Disputes & Complaints Room (FR-10.3 / FR-10.4):", Location = new Point(15, 275), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold) };
+            var lblD = new Label { Text = "Escrow Disputes & Complaints Room (FR-10.3 / FR-10.4):", Location = new Point(15, 275), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
             pnl.Controls.Add(lblD);
 
             dgvAdminDisputes = new DataGridView
             {
                 Location = new Point(15, 300),
                 Size = new Size(1005, 140),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvAdminDisputes);
             pnl.Controls.Add(dgvAdminDisputes);
 
             // System Audit Logs
-            var lblL = new Label { Text = "Administrative Audit Logs (FR-12.6):", Location = new Point(15, 450), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold) };
+            var lblL = new Label { Text = "Administrative Audit Logs (FR-12.6):", Location = new Point(15, 450), AutoSize = true, Font = new Font("Segoe UI", 9.5f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
             pnl.Controls.Add(lblL);
 
             dgvAdminLogs = new DataGridView
             {
                 Location = new Point(15, 475),
                 Size = new Size(1005, 160),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvAdminLogs);
             pnl.Controls.Add(dgvAdminLogs);
 
             return pnl;
@@ -1618,12 +1578,13 @@ namespace AgriConnect.Views
 
         private Panel CreateDatabasePanel()
         {
-            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(244, 246, 248) };
+            var pnl = new Panel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = AppTheme.OffWhite };
 
             var lblTitle = new Label
             {
                 Text = "🗄️ AgriConnect Database Management & GUI Inspector",
                 Font = new Font("Segoe UI", 13f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 10),
                 AutoSize = true
             };
@@ -1633,7 +1594,7 @@ namespace AgriConnect.Views
             {
                 Text = $"Database File Path: {_db.DatabasePath}",
                 Font = new Font("Segoe UI", 8.5f, FontStyle.Italic),
-                ForeColor = Color.Gray,
+                ForeColor = AppTheme.TextSecondary,
                 Location = new Point(15, 36),
                 Size = new Size(1000, 20)
             };
@@ -1644,40 +1605,37 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 60),
                 Size = new Size(1005, 45),
-                BackColor = Color.White,
+                BackColor = AppTheme.White,
                 BorderStyle = BorderStyle.FixedSingle
             };
 
-            var lblT = new Label { Text = "Select Table:", Location = new Point(10, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            cmbDbTables = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(100, 9), Size = new Size(160, 24) };
+            var lblT = new Label { Text = "Select Table:", Location = new Point(10, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            cmbDbTables = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Location = new Point(100, 9), Size = new Size(160, 24), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             cmbDbTables.Items.AddRange(new object[] { "Users", "Listings", "Orders", "Payments", "MarketPrices", "AdvisoryArticles", "FarmerQuestions", "Disputes", "AuditLogs" });
             cmbDbTables.SelectedIndex = 0;
             cmbDbTables.SelectedIndexChanged += (s, e) => LoadSelectedDbTable();
 
-            var lblS = new Label { Text = "Filter Records:", Location = new Point(275, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold) };
-            txtDbSearch = new TextBox { Location = new Point(370, 9), Size = new Size(160, 24) };
+            var lblS = new Label { Text = "Filter Records:", Location = new Point(275, 12), AutoSize = true, Font = new Font("Segoe UI", 9f, FontStyle.Bold), ForeColor = AppTheme.TextPrimary };
+            txtDbSearch = new TextBox { Location = new Point(370, 9), Size = new Size(160, 24), BackColor = AppTheme.OffWhite, ForeColor = AppTheme.TextPrimary };
             txtDbSearch.TextChanged += (s, e) => LoadSelectedDbTable();
 
-            Button MakeDbBtn(string text, Color c, Action act, int x, int width = 110)
+            Button MakeDbBtn(string text, Action act, int x, int width = 110, bool primary = false)
             {
                 var b = new Button
                 {
                     Text = text,
-                    BackColor = c,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
                     Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
                     Location = new Point(x, 7),
-                    Size = new Size(width, 28),
-                    Cursor = Cursors.Hand
+                    Size = new Size(width, 28)
                 };
-                b.FlatAppearance.BorderSize = 0;
+                if (primary) AppTheme.StylePrimaryButton(b);
+                else AppTheme.StyleSecondaryButton(b);
                 b.Click += (s, e) => act();
                 return b;
             }
 
-            var btnRefresh = MakeDbBtn("🔄 Refresh", Color.FromArgb(46, 125, 50), () => LoadSelectedDbTable(), 550, 80);
-            var btnBackup = MakeDbBtn("💾 Backup DB", Color.FromArgb(21, 101, 192), () =>
+            var btnRefresh = MakeDbBtn("🔄 Refresh", () => LoadSelectedDbTable(), 550, 80, true);
+            var btnBackup = MakeDbBtn("💾 Backup DB", () =>
             {
                 using var sfd = new SaveFileDialog { Filter = "JSON Database (*.json)|*.json", FileName = "agriconnect_backup.json" };
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -1687,7 +1645,7 @@ namespace AgriConnect.Views
                 }
             }, 640);
 
-            var btnRestore = MakeDbBtn("📂 Restore DB", Color.FromArgb(230, 81, 0), () =>
+            var btnRestore = MakeDbBtn("📂 Restore DB", () =>
             {
                 using var ofd = new OpenFileDialog { Filter = "JSON Database (*.json)|*.json" };
                 if (ofd.ShowDialog() == DialogResult.OK)
@@ -1698,7 +1656,7 @@ namespace AgriConnect.Views
                 }
             }, 760);
 
-            var btnReset = MakeDbBtn("⚠️ Reset to Defaults", Color.FromArgb(198, 40, 40), () =>
+            var btnReset = MakeDbBtn("⚠️ Reset Defaults", () =>
             {
                 if (MessageBox.Show("Reset database back to initial seed data?", "Confirm Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
@@ -1715,6 +1673,7 @@ namespace AgriConnect.Views
             {
                 Text = "Table Stats: Loading...",
                 Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                ForeColor = AppTheme.TextPrimary,
                 Location = new Point(15, 110),
                 Size = new Size(1005, 20)
             };
@@ -1724,11 +1683,9 @@ namespace AgriConnect.Views
             {
                 Location = new Point(15, 135),
                 Size = new Size(1005, 500),
-                BackgroundColor = Color.White,
-                ReadOnly = true,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
+            AppTheme.StyleDataGridView(dgvDbViewer);
             pnl.Controls.Add(dgvDbViewer);
 
             return pnl;
