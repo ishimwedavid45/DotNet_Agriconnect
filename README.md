@@ -1,11 +1,11 @@
-# 🌱 AgriConnect Rwanda — Desktop WinForms Application (MVC)
+#  AgriConnect Rwanda — Desktop WinForms Application (MVC)
 
 > **A Smart Farm Produce Marketplace & Agricultural Advisory Platform**  
 > Built strictly following the **Model-View-Controller (MVC)** Architecture & **IEEE 830 SRS Specification**.
 
 ---
 
-## 📋 Overview
+##  Overview
 
 **AgriConnect** directly connects Rwandan smallholder farmers with buyers (households, restaurants, retailers, cooperatives), removing unnecessary middlemen. It empowers farmers with fair market price trends, weather alerts, expert agronomy advice, and guarantees payment safety through an automated **Escrow System**.
 
@@ -13,49 +13,49 @@ This desktop version is implemented as a full-featured, standalone C# .NET Windo
 
 ---
 
-## 🏛️ MVC Architecture Overview
+##  MVC Architecture Overview
 
 The codebase is organized into clear architectural layers:
 
 ```
 AgriConnect/
-├── Models/                     # Data models, domain entities & business state
-│   ├── User.cs                 # Users, roles (Farmer, Buyer, Admin, Transporter, Agronomist)
-│   ├── Listing.cs              # Produce listings, categories, stock & harvest details
-│   ├── Order.cs                # Order lifecycle (Placed, Accepted, Ready, InTransit, Delivered, Completed)
-│   ├── Payment.cs              # Escrow payments (Held, Released, Refunded) & gateways
-│   ├── MarketPrice.cs          # National market price intelligence & trends (▲▼)
-│   ├── Advisory.cs             # RAB advisory articles & Farmer Q&A
-│   └── DisputeAndAudit.cs      # Escrow disputes, reviews, and admin audit logging
+├── Models/                     
+│   ├── User.cs                
+│   ├── Listing.cs              
+│   ├── Order.cs                
+│   ├── Payment.cs              
+│   ├── MarketPrice.cs          
+│   ├── Advisory.cs             
+│   └── DisputeAndAudit.cs      
 │
-├── Repositories/               # Data access layer & database persistence
-│   ├── AppDatabase.cs          # Singleton persistent transactional JSON database engine
-│   └── Repositories.cs         # IUserRepository, IListingRepository, IOrderRepository,
-│                               # IPaymentRepository, IMarketPriceRepository,
-│                               # IAdvisoryRepository, IDisputeRepository, IAuditLogRepository
+├── Repositories/               
+│   ├── AppDatabase.cs          
+│   └── Repositories.cs         
+│                               
+│                               
 │
-├── Controllers/                # Business logic & controller mediation (MVC)
-│   └── Controllers.cs          # AuthController, FarmerController, BuyerController,
-│                               # TransporterController, MarketController, AdvisoryController,
-│                               # AdminController & AppSession
+├── Controllers/                
+│   └── Controllers.cs          
+│                               
+│                               
 │
-├── Views/                      # Windows Forms graphical user interface (GUI)
-│   ├── LoginForm.cs            # Sign in with instant 1-click role demo switcher
-│   ├── RegisterForm.cs         # Account registration + simulated SMS/Email OTP (FR-1.2)
-│   ├── MainDashboardForm.cs    # Multi-tab dashboard with responsive sidebar
-│   ├── AddEditListingDialog.cs # Produce listing editor with dynamic fair price advisor
-│   ├── CheckoutDialog.cs       # Shopping cart, logistics choice & escrow payment
-│   ├── RaiseDisputeDialog.cs   # Formal dispute opening & evidence submission
-│   └── SimpleInputDialog.cs    # Modal dialog for codes and agronomist inputs
+├── Views/                      
+│   ├── LoginForm.cs            
+│   ├── RegisterForm.cs         
+│   ├── MainDashboardForm.cs    
+│   ├── AddEditListingDialog.cs 
+│   ├── CheckoutDialog.cs       
+│   ├── RaiseDisputeDialog.cs   
+│   └── SimpleInputDialog.cs    
 │
-├── AgriConnectTests.cs         # Automated verification suite (10 test suites covering all FRs)
-├── Program.cs                  # Desktop application entry point
-└── AgriConnect.csproj          # .NET Windows Forms project definition
+├── AgriConnectTests.cs         
+├── Program.cs                  
+└── AgriConnect.csproj          
 ```
 
 ---
 
-## ✨ Features Mapped to SRS Requirements
+##  Features Mapped to SRS Requirements
 
 | Feature Category | Related FRs | Implementation in AgriConnect |
 |---|---|---|
@@ -72,7 +72,7 @@ AgriConnect/
 
 ---
 
-## 👥 Demo User Credentials
+##   User Credentials
 
 The application is pre-seeded with realistic Rwandan agricultural data. You can log in manually or click any of the **Instant Demo Login** buttons on the login screen:
 
@@ -87,7 +87,7 @@ The application is pre-seeded with realistic Rwandan agricultural data. You can 
 
 ---
 
-## 🚀 How to Run
+##  How to Run
 
 ### 1. Requirements
 - Windows 10/11
@@ -124,11 +124,11 @@ RESULT: 10/10 Test Suites Passed (100%)
 
 ---
 
-## 🗄️ Database Implementation & GUI Interaction
+##  Database Implementation & GUI Interaction
 
 The database engine (`AppDatabase`) operates as an embedded, transactional ACID-compliant relational data store with disk persistence in the `Data/agriconnect_db.json` file.
 
-Through the **🗄️ Database GUI** tab, users can:
+Through the ** Database GUI** tab, users can:
 1. Select and inspect all database tables (`Users`, `Listings`, `Orders`, `Payments`, `MarketPrices`, `AdvisoryArticles`, `FarmerQuestions`, `Disputes`, `AuditLogs`).
 2. Search and filter records in real-time.
 3. View record counts and table schema.
@@ -138,7 +138,7 @@ Through the **🗄️ Database GUI** tab, users can:
 
 ---
 
-## 📦 Pushing to GitHub
+##  Pushing to GitHub
 
 To upload this repository to your GitHub account:
 ```bash
