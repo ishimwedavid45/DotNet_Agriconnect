@@ -39,8 +39,8 @@ namespace AgriConnect
             }
 
             ApplicationConfiguration.Initialize();
-            // Start with Form1 (Produce & Inventory Manager linked to agriconnect_db)
-            Application.Run(new Form1());
+            // The project always starts with the Login screen
+            Application.Run(new LoginForm());
             return 0;
         }
     }
