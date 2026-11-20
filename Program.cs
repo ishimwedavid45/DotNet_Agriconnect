@@ -17,9 +17,8 @@ namespace AgriConnect
             {
                 try
                 {
-                    var repo = new StudentRepository();
-                    repo.EnsureTableExists();
-                    Console.WriteLine("SUCCESS: students table created in agriconnect_db");
+                    AppDatabase.Instance.InitializeMySql();
+                    Console.WriteLine("SUCCESS: All AgriConnect tables initialized in agriconnect_db");
                     return 0;
                 }
                 catch (Exception ex)
@@ -29,19 +28,18 @@ namespace AgriConnect
                 }
             }
 
-            // Ensure MySQL table is created on app startup
+            // Initialize database & sync with MySQL in XAMPP
             try
             {
-                var repo = new StudentRepository();
-                repo.EnsureTableExists();
+                AppDatabase.Instance.InitializeMySql();
             }
             catch
             {
-                // Ignore if MySQL service isn't started yet
+                // Graceful fallback if MySQL service isn't started yet
             }
 
             ApplicationConfiguration.Initialize();
-            // Start directly with Form1 so the user sees the MySQL students form immediately!
+            // Start with Form1 (Produce & Inventory Manager linked to agriconnect_db)
             Application.Run(new Form1());
             return 0;
         }

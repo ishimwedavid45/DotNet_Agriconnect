@@ -201,10 +201,26 @@ namespace AgriConnect.Views
             AddDemoButton("Transporter", "transporter.eric@agriconnect.rw", "driver123", AppTheme.MutedGrey);
             AddDemoButton("Agronomist", "agronomist.alice@agriconnect.rw", "agri123", AppTheme.DeepCharcoal);
 
+            var btnOpenForm1 = new Button
+            {
+                Text = "🌾 Open Produce Manager (Form1)",
+                Font = new Font("Segoe UI", 9f, FontStyle.Bold),
+                Location = new Point(45, y + 66),
+                Size = new Size(395, 32),
+                Cursor = Cursors.Hand,
+                FlatStyle = FlatStyle.Flat,
+            };
+            AppTheme.StyleSecondaryButton(btnOpenForm1);
+            btnOpenForm1.Click += (s, e) =>
+            {
+                var f1 = new Form1();
+                f1.Show();
+            };
+
             Controls.AddRange(new Control[]
             {
                 pnlTop, lblEmailPhone, txtEmailPhone, lblPassword, txtPassword,
-                chkShowPass, btnLogin, btnRegister, lblQuickDemo, pnlDemo
+                chkShowPass, btnLogin, btnRegister, lblQuickDemo, pnlDemo, btnOpenForm1
             });
 
             AcceptButton = btnLogin;

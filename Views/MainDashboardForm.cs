@@ -1666,14 +1666,14 @@ namespace AgriConnect.Views
                 }
             }, 880, 115);
 
-            // MySQL Students button — opens Form1 (MySQL XAMPP demo)
+            // MySQL Produce Manager button — opens Form1 (MySQL XAMPP Produce & Inventory)
             var btnMySql = new Button
             {
-                Text      = "🐬 MySQL Students",
+                Text      = "🌾 Produce Manager (Form1)",
                 Font      = new Font("Segoe UI", 8.5f, FontStyle.Bold),
                 Location  = new Point(880 + 115 + 10, 7),
-                Size      = new Size(140, 28),
-                BackColor = Color.FromArgb(0, 122, 204),
+                Size      = new Size(180, 28),
+                BackColor = AppTheme.DarkGrey,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Cursor    = Cursors.Hand,
@@ -1685,7 +1685,7 @@ namespace AgriConnect.Views
                 f1.Show();
             };
 
-            pnlToolbar.Size = new Size(1050, 45);
+            pnlToolbar.Size = new Size(1190, 45);
             pnlToolbar.Controls.AddRange(new Control[] { lblT, cmbDbTables, lblS, txtDbSearch, btnRefresh, btnBackup, btnRestore, btnReset, btnMySql });
             pnl.Controls.Add(pnlToolbar);
 
