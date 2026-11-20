@@ -1666,7 +1666,27 @@ namespace AgriConnect.Views
                 }
             }, 880, 115);
 
-            pnlToolbar.Controls.AddRange(new Control[] { lblT, cmbDbTables, lblS, txtDbSearch, btnRefresh, btnBackup, btnRestore, btnReset });
+            // MySQL Students button — opens Form1 (MySQL XAMPP demo)
+            var btnMySql = new Button
+            {
+                Text      = "🐬 MySQL Students",
+                Font      = new Font("Segoe UI", 8.5f, FontStyle.Bold),
+                Location  = new Point(880 + 115 + 10, 7),
+                Size      = new Size(140, 28),
+                BackColor = Color.FromArgb(0, 122, 204),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Cursor    = Cursors.Hand,
+            };
+            btnMySql.FlatAppearance.BorderSize = 0;
+            btnMySql.Click += (s, e) =>
+            {
+                var f1 = new AgriConnect.Views.Form1();
+                f1.Show();
+            };
+
+            pnlToolbar.Size = new Size(1050, 45);
+            pnlToolbar.Controls.AddRange(new Control[] { lblT, cmbDbTables, lblS, txtDbSearch, btnRefresh, btnBackup, btnRestore, btnReset, btnMySql });
             pnl.Controls.Add(pnlToolbar);
 
             lblDbStats = new Label
