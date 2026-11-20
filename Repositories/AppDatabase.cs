@@ -252,11 +252,11 @@ namespace AgriConnect.Repositories
                     RaisedByUserId INT NOT NULL,
                     RaisedByName VARCHAR(150) NOT NULL,
                     Reason VARCHAR(255) NOT NULL,
-                    Details TEXT NOT NULL,
+                    Evidence TEXT,
                     Status VARCHAR(50) NOT NULL DEFAULT 'Open',
-                    ResolutionNotes TEXT,
-                    RefundApproved TINYINT(1) DEFAULT 0,
-                    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+                    AdminResolutionNotes TEXT,
+                    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    ResolvedAt DATETIME
                 );
 
                 CREATE TABLE IF NOT EXISTS audit_logs (
@@ -631,6 +631,29 @@ namespace AgriConnect.Repositories
                 }
             }
 
+            // Load Disputes
+            using (var cmd = new MySqlCommand("SELECT * FROM disputes ORDER BY DisputeId;", conn))
+            using (var r = cmd.ExecuteReader())
+            {
+                while (r.Read())
+                {
+                    Enum.TryParse<DisputeStatus>(r.GetString("Status"), out var status);
+                    loaded.Disputes.Add(new Dispute
+                    {
+                        DisputeId = r.GetInt32("DisputeId"),
+                        OrderId = r.GetInt32("OrderId"),
+                        RaisedByUserId = r.GetInt32("RaisedByUserId"),
+                        RaisedByName = r.GetString("RaisedByName"),
+                        Reason = r.GetString("Reason"),
+                        Evidence = r.IsDBNull(r.GetOrdinal("Evidence")) ? "" : r.GetString("Evidence"),
+                        Status = status,
+                        AdminResolutionNotes = r.IsDBNull(r.GetOrdinal("AdminResolutionNotes")) ? null : r.GetString("AdminResolutionNotes"),
+                        CreatedAt = r.GetDateTime("CreatedAt"),
+                        ResolvedAt = r.IsDBNull(r.GetOrdinal("ResolvedAt")) ? null : r.GetDateTime("ResolvedAt")
+                    });
+                }
+            }
+
             // Load Audit Logs
             using (var cmd = new MySqlCommand("SELECT * FROM audit_logs ORDER BY LogId DESC LIMIT 200;", conn))
             using (var r = cmd.ExecuteReader())
@@ -641,7 +664,7 @@ namespace AgriConnect.Repositories
                     {
                         LogId = r.GetInt32("LogId"),
                         Timestamp = r.GetDateTime("Timestamp"),
-                        UserId = r.GetInt32("UserId"),
+                        UserId = r.IsDBNull(r.GetOrdinal("UserId")) ? null : r.GetInt32("UserId"),
                         UserName = r.GetString("UserName"),
                         Action = r.GetString("Action"),
                         Details = r.GetString("Details")
@@ -660,6 +683,22 @@ namespace AgriConnect.Repositories
             loaded.NextLogId = (loaded.AuditLogs.Count > 0 ? loaded.AuditLogs.Max(l => l.LogId) : 0) + 1;
 
             _data = loaded;
+        }
+
+        public void DeleteRecordFromMySql(string tableName, string keyColumn, int id)
+        {
+            try
+            {
+                using var conn = MySqlConnectionFactory.CreateConnection();
+                conn.Open();
+                using var cmd = new MySqlCommand($"DELETE FROM `{tableName}` WHERE `{keyColumn}` = @id;", conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"MySQL delete note: {ex.Message}");
+            }
         }
 
         public void Save()
@@ -796,6 +835,87 @@ namespace AgriConnect.Repositories
                         cmd.Parameters.AddWithValue("@ref", p.TransactionReference);
                         cmd.Parameters.AddWithValue("@rel", (object?)p.ReleasedAt ?? DBNull.Value);
                         cmd.Parameters.AddWithValue("@created", p.CreatedAt);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Sync Disputes
+                    foreach (var d in _data.Disputes)
+                    {
+                        using var cmd = new MySqlCommand(@"
+                            INSERT INTO disputes (DisputeId, OrderId, RaisedByUserId, RaisedByName, Reason, Evidence, Status, AdminResolutionNotes, CreatedAt, ResolvedAt)
+                            VALUES (@id, @oid, @uid, @uname, @reason, @evidence, @status, @notes, @created, @resolved)
+                            ON DUPLICATE KEY UPDATE 
+                                Status = VALUES(Status),
+                                AdminResolutionNotes = VALUES(AdminResolutionNotes),
+                                ResolvedAt = VALUES(ResolvedAt);", conn);
+                        cmd.Parameters.AddWithValue("@id", d.DisputeId);
+                        cmd.Parameters.AddWithValue("@oid", d.OrderId);
+                        cmd.Parameters.AddWithValue("@uid", d.RaisedByUserId);
+                        cmd.Parameters.AddWithValue("@uname", d.RaisedByName);
+                        cmd.Parameters.AddWithValue("@reason", d.Reason);
+                        cmd.Parameters.AddWithValue("@evidence", d.Evidence);
+                        cmd.Parameters.AddWithValue("@status", d.Status.ToString());
+                        cmd.Parameters.AddWithValue("@notes", (object?)d.AdminResolutionNotes ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@created", d.CreatedAt);
+                        cmd.Parameters.AddWithValue("@resolved", (object?)d.ResolvedAt ?? DBNull.Value);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Sync Farmer Questions
+                    foreach (var q in _data.FarmerQuestions)
+                    {
+                        using var cmd = new MySqlCommand(@"
+                            INSERT INTO farmer_questions (QuestionId, FarmerId, FarmerName, Subject, QuestionText, AnswerText, AnsweredBy, AskedAt, AnsweredAt)
+                            VALUES (@id, @fid, @fname, @subj, @q, @ans, @ansby, @asked, @ansat)
+                            ON DUPLICATE KEY UPDATE 
+                                AnswerText = VALUES(AnswerText),
+                                AnsweredBy = VALUES(AnsweredBy),
+                                AnsweredAt = VALUES(AnsweredAt);", conn);
+                        cmd.Parameters.AddWithValue("@id", q.QuestionId);
+                        cmd.Parameters.AddWithValue("@fid", q.FarmerId);
+                        cmd.Parameters.AddWithValue("@fname", q.FarmerName);
+                        cmd.Parameters.AddWithValue("@subj", q.Subject);
+                        cmd.Parameters.AddWithValue("@q", q.QuestionText);
+                        cmd.Parameters.AddWithValue("@ans", (object?)q.AnswerText ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@ansby", (object?)q.AnsweredBy ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@asked", q.AskedAt);
+                        cmd.Parameters.AddWithValue("@ansat", (object?)q.AnsweredAt ?? DBNull.Value);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Sync Advisory Articles
+                    foreach (var a in _data.AdvisoryArticles)
+                    {
+                        using var cmd = new MySqlCommand(@"
+                            INSERT INTO advisory_articles (ArticleId, Title, Category, AuthorName, Content, Language, PublishedAt)
+                            VALUES (@id, @title, @cat, @author, @content, @lang, @pub)
+                            ON DUPLICATE KEY UPDATE 
+                                Title = VALUES(Title),
+                                Content = VALUES(Content);", conn);
+                        cmd.Parameters.AddWithValue("@id", a.ArticleId);
+                        cmd.Parameters.AddWithValue("@title", a.Title);
+                        cmd.Parameters.AddWithValue("@cat", a.Category);
+                        cmd.Parameters.AddWithValue("@author", a.AuthorName);
+                        cmd.Parameters.AddWithValue("@content", a.Content);
+                        cmd.Parameters.AddWithValue("@lang", a.Language);
+                        cmd.Parameters.AddWithValue("@pub", a.PublishedAt);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Sync Audit Logs
+                    foreach (var al in _data.AuditLogs)
+                    {
+                        using var cmd = new MySqlCommand(@"
+                            INSERT INTO audit_logs (LogId, Timestamp, UserId, UserName, Action, Details)
+                            VALUES (@id, @time, @uid, @uname, @act, @det)
+                            ON DUPLICATE KEY UPDATE 
+                                Details = VALUES(Details);", conn);
+                        cmd.Parameters.AddWithValue("@id", al.LogId);
+                        cmd.Parameters.AddWithValue("@time", al.Timestamp);
+                        cmd.Parameters.AddWithValue("@uid", (object?)al.UserId ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@uname", al.UserName);
+                        cmd.Parameters.AddWithValue("@act", al.Action);
+                        cmd.Parameters.AddWithValue("@det", al.Details);
                         cmd.ExecuteNonQuery();
                     }
                 }

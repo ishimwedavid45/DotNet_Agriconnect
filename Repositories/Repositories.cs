@@ -59,6 +59,7 @@ namespace AgriConnect.Repositories
             var user = GetById(id);
             if (user == null) return false;
             _db.Data.Users.Remove(user);
+            _db.DeleteRecordFromMySql("users", "UserId", id);
             _db.Save();
             return true;
         }
@@ -143,6 +144,7 @@ namespace AgriConnect.Repositories
             var item = GetById(id);
             if (item == null) return false;
             _db.Data.Listings.Remove(item);
+            _db.DeleteRecordFromMySql("listings", "ListingId", id);
             _db.Save();
             return true;
         }
